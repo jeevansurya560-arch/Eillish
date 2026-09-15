@@ -1,0 +1,116 @@
+@import './tokens.css';
+@import './typography.css';
+
+/* ==========================================================================
+   Lpalo — Base Rules & Reset
+   Warm peach paper (#f6e0db), charcoal ink (#000000), 2px solid borders, zero shadows.
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  min-height: 100%;
+  width: 100%;
+  background-color: var(--color-peach-paper);
+  color: var(--color-charcoal-ink);
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  outline: none;
+  color: inherit;
+}
+
+input, textarea, select {
+  font: inherit;
+  color: inherit;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+img, svg {
+  display: block;
+}
+
+/* ==========================================================================
+   Utility Classes & Layouts
+   ========================================================================== */
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.items-stretch { align-items: stretch; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.justify-end { justify-content: flex-end; }
+.gap-1 { gap: var(--spacing-4); }
+.gap-2 { gap: var(--spacing-8); }
+.gap-3 { gap: var(--spacing-15); }
+.gap-4 { gap: var(--spacing-20); }
+.gap-6 { gap: var(--spacing-30); }
+.gap-8 { gap: var(--spacing-46); }
+
+.flex-1 { flex: 1 1 0%; }
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+/* Keyboard Kbd Primitive: pill shape with 2px border */
+kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--color-charcoal-ink);
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-full);
+}
+
+/* Scrollbar refinement */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-peach-paper);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-charcoal-ink);
+  border-radius: 4px;
+}
+
+/* Focus Ring */
+:focus-visible {
+  outline: 2px solid var(--color-charcoal-ink);
+  outline-offset: 2px;
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s var(--transition-fast) forwards;
+}

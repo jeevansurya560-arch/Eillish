@@ -1,0 +1,312 @@
+/* ==========================================================================
+   Lpalo — AppShell & Small Multi-Property Navigation Bar
+   Warm Peach Paper canvas (#f6e0db), 2px solid black borders (#000000),
+   47px pill navigation buttons, flat crayon accents, zero drop shadows.
+   ========================================================================== */
+
+.lpalo-app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--color-peach-paper);
+  color: var(--color-charcoal-ink);
+}
+
+/* --------------------------------------------------------------------------
+   Small, Compact Topbar (Height: 52px)
+   -------------------------------------------------------------------------- */
+.lpalo-topbar {
+  height: 52px;
+  background-color: var(--color-peach-paper);
+  border-bottom: 2px solid var(--color-charcoal-ink);
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  padding: 0 16px;
+}
+
+.lpalo-topbar-inner {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* Left Section: Eillish Brand & Workspaces */
+.lpalo-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.lpalo-workspace-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-nav);
+  font-family: var(--font-manrope);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-charcoal-ink);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.lpalo-workspace-pill:hover {
+  background: var(--color-sunbeam-yellow);
+}
+
+.lpalo-workspace-label {
+  font-family: var(--font-manrope);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-charcoal-ink);
+}
+
+/* Brand Pill */
+.lpalo-brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-nav);
+  text-decoration: none;
+  color: var(--color-charcoal-ink);
+  transition: all var(--transition-fast);
+}
+
+.lpalo-brand-pill:hover {
+  background: var(--color-sunbeam-yellow);
+}
+
+.lpalo-brand-mark {
+  font-family: var(--font-alfa-slab-one);
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  color: var(--color-charcoal-ink);
+}
+
+.lpalo-brand-tag {
+  font-family: var(--font-manrope);
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  background: var(--color-mint-wash);
+  border: 1.5px solid var(--color-charcoal-ink);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+}
+
+/* Compact Nav Cluster */
+.lpalo-nav-cluster {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.lpalo-nav-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-nav);
+  font-family: var(--font-manrope);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-charcoal-ink);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.lpalo-nav-pill:hover {
+  background: var(--color-sunbeam-yellow);
+}
+
+.lpalo-nav-pill.active {
+  background: var(--color-ember-orange);
+  color: var(--color-charcoal-ink);
+}
+
+.lpalo-pill-ai {
+  font-size: 9px;
+  font-weight: 800;
+  background: var(--color-lilac-tint);
+  border: 1.5px solid var(--color-charcoal-ink);
+  padding: 1px 5px;
+  border-radius: var(--radius-full);
+}
+
+.lpalo-pill-badge {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  background: var(--color-snow);
+  border: 1.5px solid var(--color-charcoal-ink);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+}
+
+.lpalo-nav-pill.active .lpalo-pill-badge {
+  background: var(--color-snow);
+}
+
+/* Right Section */
+.lpalo-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lpalo-search-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-nav);
+  font-family: var(--font-manrope);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-charcoal-ink);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.lpalo-search-pill:hover {
+  background: var(--color-mint-wash);
+}
+
+.lpalo-search-text {
+  font-size: 12px;
+}
+
+.lpalo-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-nav);
+  font-family: var(--font-manrope);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-charcoal-ink);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.lpalo-status-pill:hover {
+  background: var(--color-powder-blue);
+}
+
+.lpalo-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--success);
+  border: 1px solid var(--color-charcoal-ink);
+}
+
+.lpalo-profile-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-nav);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.lpalo-profile-pill:hover {
+  background: var(--color-sunbeam-yellow);
+}
+
+.lpalo-avatar {
+  font-family: var(--font-alfa-slab-one);
+  font-size: 11px;
+}
+
+/* Workspace Dropdown */
+.lpalo-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 220px;
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: 20px;
+  padding: 8px;
+  z-index: 50;
+}
+
+.lpalo-dropdown-header {
+  font-family: var(--font-manrope);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 6px 12px;
+}
+
+.lpalo-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  font-family: var(--font-manrope);
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.lpalo-dropdown-item:hover {
+  background: var(--color-mint-wash);
+}
+
+.lpalo-dropdown-item.active {
+  background: var(--color-sunbeam-yellow);
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   Main Content Layout (Full-Width on Peach Canvas)
+   -------------------------------------------------------------------------- */
+.lpalo-app-content {
+  flex: 1;
+  padding: 36px 32px 64px;
+  max-width: var(--page-max-width);
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media (max-width: 960px) {
+  .lpalo-nav-cluster {
+    display: none;
+  }
+  .lpalo-status-pill {
+    display: none;
+  }
+  .lpalo-app-content {
+    padding: 20px 16px 40px;
+  }
+}
