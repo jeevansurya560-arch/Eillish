@@ -1,0 +1,129 @@
+:root {
+  /* ==========================================================================
+     Lpalo — Style Reference Design Tokens
+     Warm Peach Paper canvas (#f6e0db), Charcoal Ink outlines (2px solid #000000),
+     Snow White cards, 40-47px pill radii, flat crayon accents, zero drop shadows.
+     ========================================================================== */
+
+  /* Palette Colors */
+  --color-peach-paper: #f6e0db;
+  --color-charcoal-ink: #000000;
+  --color-snow: #ffffff;
+  --color-ember-orange: #ef724f;
+  --color-magenta-pop: #981082;
+  --color-sunbeam-yellow: #e7db4c;
+  --color-mint-wash: #ace2df;
+  --color-powder-blue: #84bfff;
+  --color-lilac-tint: #e69dff;
+  --color-lime-zest: #6ed311;
+  --color-cobalt-spark: #5196ff;
+
+  /* Semantic Theme Surfaces */
+  --background: #f6e0db;
+  --surface: #ffffff;
+  --surface-subtle: #fcf4f2;
+  --surface-hover: #faece8;
+  --surface-active: #f3dad4;
+
+  /* Structural Borders: 2px solid Charcoal Ink */
+  --border: #000000;
+  --border-width: 2px;
+  --border-subtle: #222222;
+  --border-strong: #000000;
+  --border-focus: #000000;
+
+  /* Typography Colors */
+  --text-primary: #000000;
+  --text-secondary: #222222;
+  --text-muted: #555555;
+  --text-faint: #777777;
+  --text-inverse: #ffffff;
+
+  /* Accents */
+  --accent: #ef724f;
+  --accent-hover: #d95e3c;
+  --accent-subtle: #fbe3dc;
+  --accent-border: #000000;
+
+  /* Semantic Status Colors */
+  --success: #16a34a;
+  --success-subtle: #ace2df;
+  --success-border: #000000;
+
+  --warning: #d97706;
+  --warning-subtle: #e7db4c;
+  --warning-border: #000000;
+
+  --danger: #ef724f;
+  --danger-subtle: #fbe3dc;
+  --danger-border: #000000;
+
+  /* Radii: 40-47px pills everywhere, 10px small */
+  --radius-full: 47px;
+  --radius-nav: 47px;
+  --radius-cards: 40px;
+  --radius-buttons: 47px;
+  --radius-tags: 47px;
+  --radius-xs: 10px;
+  --radius-sm: 10px;
+  --radius-md: 20px;
+  --radius-lg: 40px;
+  --radius-xl: 47px;
+
+  /* Zero Elevation (strictly no drop shadows) */
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-ambient: none;
+  --shadow-float: none;
+
+  /* Typography Stack */
+  --font-alfa-slab-one: 'Alfa Slab One', cursive, serif;
+  --font-manrope: 'Manrope', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: var(--font-manrope);
+  --font-heading: var(--font-alfa-slab-one);
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  /* Type Scale */
+  --text-caption: 12px;
+  --leading-caption: 1.5;
+  --text-body-sm: 14px;
+  --leading-body-sm: 1.55;
+  --text-body: 16px;
+  --leading-body: 1.6;
+  --text-heading-sm: 25px;
+  --leading-heading-sm: 1.24;
+  --text-subheading: 34px;
+  --leading-subheading: 1.16;
+  --text-heading: 46px;
+  --leading-heading: 1.09;
+  --text-heading-lg: 50px;
+  --leading-heading-lg: 1.12;
+  --text-display: 76px;
+  --leading-display: 1.05;
+
+  /* Spacing Scale */
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-10: 10px;
+  --spacing-13: 13px;
+  --spacing-15: 15px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-30: 30px;
+  --spacing-40: 40px;
+  --spacing-46: 46px;
+  --spacing-80: 80px;
+
+  /* Layout dimensions */
+  --sidebar-width: 260px;
+  --topbar-height: 52px;
+  --page-max-width: 1200px;
+  --content-max-width: 1200px;
+
+  /* Transitions */
+  --transition-fast: 140ms ease;
+  --transition-normal: 220ms ease;
+}

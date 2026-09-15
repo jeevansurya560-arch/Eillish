@@ -1,0 +1,122 @@
+/* ==========================================================================
+   Lpalo — Typography Hierarchy
+   Alfa Slab One shouting slab-serif display headlines + Manrope geometric sans.
+   Zero neutral grays — all text in pure Charcoal Ink (#000000).
+   ========================================================================== */
+
+body, html {
+  font-family: var(--font-manrope);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--color-charcoal-ink);
+  background-color: var(--color-peach-paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Shouting Headlines: Alfa Slab One with tight leading */
+h1, h2, h3, h4, h5, h6, .hero-heading {
+  font-family: var(--font-alfa-slab-one);
+  color: var(--color-charcoal-ink);
+  font-weight: 400;
+  line-height: var(--leading-heading);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.hero-heading {
+  font-size: var(--text-heading);
+  line-height: var(--leading-heading);
+}
+
+.hero-subtitle {
+  font-family: var(--font-manrope);
+  font-size: var(--text-body);
+  color: var(--color-charcoal-ink);
+  margin-top: 6px;
+}
+
+.type-display {
+  font-family: var(--font-alfa-slab-one);
+  font-size: var(--text-display);
+  line-height: var(--leading-display);
+  color: var(--color-charcoal-ink);
+}
+
+.type-h1 {
+  font-family: var(--font-alfa-slab-one);
+  font-size: var(--text-heading-lg);
+  line-height: var(--leading-heading-lg);
+  color: var(--color-charcoal-ink);
+}
+
+.type-h2 {
+  font-family: var(--font-alfa-slab-one);
+  font-size: var(--text-heading);
+  line-height: var(--leading-heading);
+  color: var(--color-charcoal-ink);
+}
+
+.type-h3 {
+  font-family: var(--font-alfa-slab-one);
+  font-size: var(--text-heading-sm);
+  line-height: var(--leading-heading-sm);
+  color: var(--color-charcoal-ink);
+}
+
+/* Body & Paragraphs */
+.type-body {
+  font-family: var(--font-manrope);
+  font-size: var(--text-body); /* 16px */
+  line-height: var(--leading-body); /* 1.6 */
+  color: var(--color-charcoal-ink);
+  font-weight: 400;
+}
+
+.type-secondary {
+  font-family: var(--font-manrope);
+  font-size: var(--text-body-sm); /* 14px */
+  line-height: var(--leading-body-sm);
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* Metadata & Small labels */
+.type-caption, .type-metadata {
+  font-family: var(--font-manrope);
+  font-size: var(--text-caption); /* 12px */
+  line-height: var(--leading-caption);
+  color: var(--text-muted);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.type-overline {
+  font-family: var(--font-manrope);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-charcoal-ink);
+}
+
+/* Tag Pill Typography */
+.tag-pill-text {
+  font-family: var(--font-manrope);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-charcoal-ink);
+}
+
+/* Monospace / Code */
+.type-code, code, pre, kbd {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: -0.01em;
+}
+
+.type-path {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+}

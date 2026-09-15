@@ -1,0 +1,755 @@
+/* ==========================================================================
+   Lpalo — Landing Page Styles (Pure Neural Architecture, Zero Photos)
+   Warm Peach Paper (#f6e0db), Charcoal Ink outlines (2px solid #000000),
+   40-47px pill radii, flat crayon accents, zero drop shadows.
+   ========================================================================== */
+
+.landing-container {
+  width: 100vw;
+  max-width: 100%;
+  min-height: 100vh;
+  background-color: var(--color-peach-paper);
+  color: var(--color-charcoal-ink);
+  overflow-x: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Small Top Navigation Bar (Height: 52px)
+   -------------------------------------------------------------------------- */
+.landing-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  background-color: var(--color-peach-paper);
+  border-bottom: 2px solid var(--color-charcoal-ink);
+  z-index: 100;
+}
+
+.landing-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-nav);
+  padding: 4px 14px;
+  transition: all var(--transition-fast);
+}
+
+.landing-nav-brand:hover {
+  background: var(--color-sunbeam-yellow);
+}
+
+.landing-brand-mark {
+  font-family: var(--font-alfa-slab-one);
+  font-size: 15px;
+  color: var(--color-charcoal-ink);
+}
+
+.landing-brand-tag {
+  font-family: var(--font-manrope);
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  background: var(--color-mint-wash);
+  border: 1.5px solid var(--color-charcoal-ink);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+}
+
+.landing-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.landing-nav-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-nav);
+  font-family: var(--font-manrope);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-charcoal-ink);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.landing-nav-pill-btn:hover {
+  background: var(--color-sunbeam-yellow);
+}
+
+.landing-nav-pill-btn.active {
+  background: var(--color-ember-orange);
+}
+
+.landing-nav-badge {
+  font-size: 9.5px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  background: var(--color-mint-wash);
+  border: 1.5px solid var(--color-charcoal-ink);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+}
+
+.landing-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.landing-cta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background: var(--color-ember-orange);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-nav);
+  font-family: var(--font-manrope);
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--color-charcoal-ink);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.landing-cta-pill:hover {
+  background: var(--color-sunbeam-yellow);
+}
+
+/* --------------------------------------------------------------------------
+   Hero Section (Photo-Free, Storybook Editorial)
+   -------------------------------------------------------------------------- */
+.landing-hero {
+  position: relative;
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: 100px 32px 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Floating Line-Art SVG Doodles */
+.doodle-wrap {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.85;
+}
+.doodle-1 { top: 90px; left: 40px; transform: rotate(-12deg); }
+.doodle-2 { top: 120px; right: 60px; transform: rotate(14deg); }
+.doodle-3 { bottom: 80px; left: 80px; transform: rotate(8deg); }
+.doodle-4 { bottom: 100px; right: 90px; transform: rotate(-15deg); }
+
+.landing-hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: var(--color-mint-wash);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-full);
+  font-family: var(--font-manrope);
+  font-size: 11.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 24px;
+}
+
+.landing-hero-title {
+  font-family: var(--font-alfa-slab-one);
+  font-size: 58px;
+  line-height: 1.1;
+  color: var(--color-charcoal-ink);
+  max-width: 980px;
+  margin-bottom: 24px;
+}
+
+.landing-hero-subtitle {
+  font-family: var(--font-manrope);
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--color-charcoal-ink);
+  max-width: 760px;
+  margin-bottom: 32px;
+}
+
+.landing-hero-ctas {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 48px;
+}
+
+.hero-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: var(--color-ember-orange);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-buttons);
+  font-family: var(--font-manrope);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-charcoal-ink);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.hero-btn-primary:hover {
+  background: var(--color-sunbeam-yellow);
+}
+
+.hero-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-buttons);
+  font-family: var(--font-manrope);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-charcoal-ink);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.hero-btn-secondary:hover {
+  background: var(--color-mint-wash);
+}
+
+/* --------------------------------------------------------------------------
+   Interactive Neural Vector Waveform Strip
+   -------------------------------------------------------------------------- */
+.landing-neural-strip {
+  width: 100%;
+  max-width: 940px;
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-cards);
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.neural-strip-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.neural-strip-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--color-powder-blue);
+  border: 2px solid var(--color-charcoal-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.neural-strip-heading {
+  font-family: var(--font-alfa-slab-one);
+  font-size: 16px;
+  color: var(--color-charcoal-ink);
+}
+
+.neural-strip-sub {
+  font-family: var(--font-manrope);
+  font-size: 13px;
+  color: var(--color-charcoal-ink);
+}
+
+.neural-strip-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.neural-filter-pill {
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-charcoal-ink);
+  background: var(--color-snow);
+  font-family: var(--font-manrope);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.neural-filter-pill.active {
+  background: var(--color-sunbeam-yellow);
+}
+
+.neural-filter-pill:hover {
+  background: var(--color-mint-wash);
+}
+
+/* --------------------------------------------------------------------------
+   Specification Matrix (4-Grid Outline Cards)
+   -------------------------------------------------------------------------- */
+.landing-specs-grid {
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin: 40px auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.landing-spec-card {
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-cards);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.landing-spec-card:nth-child(1) { background: #ffffff; }
+.landing-spec-card:nth-child(2) { background: #ffffff; }
+.landing-spec-card:nth-child(3) { background: #ffffff; }
+.landing-spec-card:nth-child(4) { background: #ffffff; }
+
+.spec-card-num {
+  font-family: var(--font-alfa-slab-one);
+  font-size: 34px;
+  line-height: 1.1;
+  color: var(--color-charcoal-ink);
+}
+
+.spec-card-label {
+  font-family: var(--font-manrope);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--color-charcoal-ink);
+}
+
+.spec-card-sub {
+  font-family: var(--font-manrope);
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   What We Are Working On (4 Chunky Outline Cards)
+   -------------------------------------------------------------------------- */
+.landing-section {
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin: 80px auto 0;
+  padding: 0 32px;
+}
+
+.section-header-block {
+  margin-bottom: 32px;
+}
+
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-charcoal-ink);
+  background: var(--color-sunbeam-yellow);
+  font-family: var(--font-manrope);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.section-shouting-title {
+  font-family: var(--font-alfa-slab-one);
+  font-size: 38px;
+  color: var(--color-charcoal-ink);
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+
+.section-desc-text {
+  font-family: var(--font-manrope);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 680px;
+}
+
+.pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.pillar-card {
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-cards);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 250px;
+}
+
+.pillar-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.pillar-card-badge {
+  padding: 4px 12px;
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-full);
+  font-family: var(--font-manrope);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.pillar-card-badge--orange { background: var(--color-ember-orange); }
+.pillar-card-badge--mint { background: var(--color-mint-wash); }
+.pillar-card-badge--blue { background: var(--color-powder-blue); }
+.pillar-card-badge--yellow { background: var(--color-sunbeam-yellow); }
+
+.pillar-card-num {
+  font-family: var(--font-alfa-slab-one);
+  font-size: 22px;
+  color: var(--color-charcoal-ink);
+}
+
+.pillar-card-title {
+  font-family: var(--font-alfa-slab-one);
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--color-charcoal-ink);
+  margin-bottom: 12px;
+}
+
+.pillar-card-desc {
+  font-family: var(--font-manrope);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-charcoal-ink);
+}
+
+/* --------------------------------------------------------------------------
+   Workspaces Gateway (Links to Individual Inside Pages)
+   -------------------------------------------------------------------------- */
+.gateway-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.gateway-card {
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-cards);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  color: var(--color-charcoal-ink);
+}
+
+.gateway-card:hover {
+  transform: translateY(-3px);
+  background: #fff8f6;
+}
+
+.gateway-card-title {
+  font-family: var(--font-alfa-slab-one);
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--color-charcoal-ink);
+  margin: 10px 0 8px;
+}
+
+.gateway-card-desc {
+  font-family: var(--font-manrope);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.gateway-card-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 18px;
+  padding: 6px 14px;
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-full);
+  background: var(--color-snow);
+  font-family: var(--font-manrope);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.gateway-card:hover .gateway-card-btn {
+  background: var(--color-sunbeam-yellow);
+}
+
+/* --------------------------------------------------------------------------
+   Guidelines Section
+   -------------------------------------------------------------------------- */
+.guidelines-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.guideline-card {
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-cards);
+  padding: 28px;
+}
+
+.guideline-pill {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-charcoal-ink);
+  font-family: var(--font-manrope);
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.guideline-title {
+  font-family: var(--font-alfa-slab-one);
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.guideline-body {
+  font-family: var(--font-manrope);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   Contact Section
+   -------------------------------------------------------------------------- */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.contact-card {
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-cards);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contact-channel-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-full);
+  background: var(--color-peach-paper);
+  font-family: var(--font-manrope);
+  font-weight: 700;
+  font-size: 13.5px;
+}
+
+.contact-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contact-pill-input {
+  width: 100%;
+  padding: 12px 20px;
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-buttons);
+  background: var(--color-snow);
+  font-family: var(--font-manrope);
+  font-size: 14px;
+}
+
+.contact-pill-submit {
+  padding: 12px 24px;
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-buttons);
+  background: var(--color-ember-orange);
+  font-family: var(--font-manrope);
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.contact-pill-submit:hover {
+  background: var(--color-sunbeam-yellow);
+}
+
+/* --------------------------------------------------------------------------
+   Footer Block
+   -------------------------------------------------------------------------- */
+.landing-footer {
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin: 90px auto 40px;
+  padding: 0 32px;
+}
+
+.landing-footer-box {
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-cards);
+  padding: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.footer-top-grid {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+.footer-brand-title {
+  font-family: var(--font-alfa-slab-one);
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.footer-brand-desc {
+  font-family: var(--font-manrope);
+  font-size: 13.5px;
+  max-width: 320px;
+  line-height: 1.6;
+}
+
+.footer-links-group {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-col-header {
+  font-family: var(--font-manrope);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.footer-col-link {
+  font-family: var(--font-manrope);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-charcoal-ink);
+  text-decoration: none;
+}
+
+.footer-col-link:hover {
+  text-decoration: underline;
+}
+
+.footer-bottom-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 20px;
+  border-top: 2px solid var(--color-charcoal-ink);
+  font-family: var(--font-manrope);
+  font-size: 12px;
+  font-weight: 700;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-charcoal-ink);
+  background: var(--color-mint-wash);
+}
+
+.status-dot-circle {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--success);
+  border: 1px solid var(--color-charcoal-ink);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .landing-hero-title { font-size: 42px; }
+  .landing-specs-grid { grid-template-columns: repeat(2, 1fr); }
+  .pillars-grid { grid-template-columns: 1fr; }
+  .gateway-grid { grid-template-columns: repeat(2, 1fr); }
+  .guidelines-grid { grid-template-columns: 1fr; }
+  .contact-layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .landing-nav-links { display: none; }
+  .landing-hero-title { font-size: 32px; }
+  .landing-specs-grid { grid-template-columns: 1fr; }
+  .gateway-grid { grid-template-columns: 1fr; }
+  .footer-links-group { gap: 24px; }
+}
