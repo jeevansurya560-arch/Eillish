@@ -12,7 +12,8 @@ import {
   FileCode,
   X,
 } from 'lucide-react';
-import { mockDocuments } from '../../data/mockData';
+import { knowledgeService } from '../../services/knowledge.service';
+import { Document } from '../../types';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -21,12 +22,14 @@ interface CommandPaletteProps {
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
   const [search, setSearch] = useState('');
+  const [docs, setDocs] = useState<Document[]>([]);
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 50);
+      knowledgeService.getDocuments().then(setDocs).catch(() => setDocs([]));
     }
   }, [isOpen]);
 
@@ -54,7 +57,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
     { title: 'Settings', icon: Settings, path: '/settings' },
   ];
 
-  const filteredDocs = mockDocuments.filter((doc) =>
+  const filteredDocs = docs.filter((doc) =>
     doc.title.toLowerCase().includes(search.toLowerCase()) ||
     doc.path.toLowerCase().includes(search.toLowerCase())
   );
@@ -68,8 +71,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
     onClose();
   };
 
-  const handleSelectDoc = () => {
-    navigate('/knowledge');
+  const handleSelectDoc = (docId: string) => {
+    navigate(`/knowledge/${docId}`);
     onClose();
   };
 
@@ -83,23 +86,18 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         alignItems: 'flex-start',
         justifyContent: 'center',
         paddingTop: '12vh',
-        background: 'rgba(15, 23, 42, 0.45)',
-        backdropFilter: 'blur(3px)',
+        background: 'rgba(0, 0, 0, 0.45)',
       }}
       onClick={onClose}
     >
       <div
-        className="animate-slide-up"
+        className="ui-card"
         style={{
           width: '100%',
-          maxWidth: '560px',
-          background: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-xl)',
-          boxShadow: 'var(--shadow-float)',
+          maxWidth: 620,
+          background: 'var(--color-snow)',
+          padding: 0,
           overflow: 'hidden',
-          display: 'flex',
-          flexDirection: 'column',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -110,42 +108,57 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
             alignItems: 'center',
             gap: 12,
             padding: '14px 18px',
-            borderBottom: '1px solid var(--border)',
+            borderBottom: '2px solid var(--color-charcoal-ink)',
           }}
         >
-          <Search size={17} style={{ color: 'var(--text-muted)' }} />
+          <Search size={18} style={{ color: 'var(--color-charcoal-ink)', flexShrink: 0 }} />
           <input
             ref={inputRef}
             type="text"
-            className="flex-1"
-            placeholder="Type a command or search knowledge..."
+            placeholder="Type a command or search indexed files..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{
-              fontSize: '14px',
-              color: 'var(--text-primary)',
-              fontFamily: 'var(--font-sans)',
+              border: 'none',
+              outline: 'none',
+              background: 'transparent',
+              fontSize: 14,
+              fontFamily: 'var(--font-manrope)',
+              fontWeight: 600,
+              width: '100%',
+              color: 'var(--color-charcoal-ink)',
             }}
           />
-          {search ? (
-            <button onClick={() => setSearch('')} style={{ color: 'var(--text-muted)' }}>
-              <X size={14} />
-            </button>
-          ) : (
-            <kbd>ESC</kbd>
-          )}
+          <button
+            onClick={onClose}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'var(--color-charcoal-ink)',
+              display: 'flex',
+            }}
+          >
+            <X size={16} />
+          </button>
         </div>
 
-        {/* List of Results */}
-        <div style={{ maxHeight: '380px', overflowY: 'auto', padding: '8px' }}>
-          {/* Quick Actions / Navigation */}
+        {/* Results List */}
+        <div style={{ maxHeight: 380, overflowY: 'auto', padding: 8 }}>
+          {/* Navigation Section */}
           {filteredNav.length > 0 && (
             <div style={{ marginBottom: 12 }}>
               <div
-                className="type-overline"
-                style={{ padding: '6px 10px', color: 'var(--text-muted)' }}
+                style={{
+                  fontSize: 11,
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  color: 'var(--text-muted)',
+                  padding: '6px 12px',
+                  fontFamily: 'var(--font-mono)',
+                }}
               >
-                Navigation
+                Quick Navigation
               </div>
               {filteredNav.map((item) => {
                 const Icon = item.icon;
@@ -156,113 +169,75 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '8px 10px',
+                      gap: 10,
+                      padding: '8px 12px',
                       borderRadius: 'var(--radius-sm)',
                       cursor: 'pointer',
-                      fontSize: '13px',
-                      color: 'var(--text-primary)',
-                      transition: 'background 0.12s ease',
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: 'var(--color-charcoal-ink)',
+                      transition: 'background var(--transition-fast)',
                     }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background = 'var(--surface-subtle)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
+                    onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-subtle)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <Icon size={15} style={{ color: 'var(--text-muted)' }} />
-                      <span>{item.title}</span>
-                    </div>
-                    <ArrowRight size={13} style={{ color: 'var(--text-muted)' }} />
+                    <Icon size={14} />
+                    <span>{item.title}</span>
                   </div>
                 );
               })}
             </div>
           )}
 
-          {/* Matching Documents */}
+          {/* Documents Section */}
           {filteredDocs.length > 0 && (
             <div>
               <div
-                className="type-overline"
-                style={{ padding: '6px 10px', color: 'var(--text-muted)' }}
+                style={{
+                  fontSize: 11,
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  color: 'var(--text-muted)',
+                  padding: '6px 12px',
+                  fontFamily: 'var(--font-mono)',
+                }}
               >
-                Knowledge Documents ({filteredDocs.length})
+                Indexed Documents
               </div>
-              {filteredDocs.map((doc) => (
+              {filteredDocs.slice(0, 5).map((doc) => (
                 <div
                   key={doc.id}
-                  onClick={handleSelectDoc}
+                  onClick={() => handleSelectDoc(doc.id)}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '8px 10px',
+                    padding: '8px 12px',
                     borderRadius: 'var(--radius-sm)',
                     cursor: 'pointer',
-                    fontSize: '13px',
-                    transition: 'background 0.12s ease',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: 'var(--color-charcoal-ink)',
+                    transition: 'background var(--transition-fast)',
                   }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = 'var(--surface-subtle)')
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.background = 'transparent')
-                  }
+                  onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-subtle)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <FileCode size={15} style={{ color: 'var(--text-muted)' }} />
-                    <div>
-                      <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>
-                        {doc.title}
-                      </div>
-                      <div className="type-path" style={{ fontSize: '11px' }}>
-                        {doc.path}
-                      </div>
-                    </div>
+                  <div className="flex items-center gap-2">
+                    <FileCode size={14} />
+                    <span>{doc.title}</span>
                   </div>
-                  <span className="type-metadata" style={{ fontFamily: 'var(--font-mono)' }}>
-                    {doc.chunksCount} chunks
-                  </span>
+                  <span className="type-metadata" style={{ fontSize: 11 }}>{doc.repository}</span>
                 </div>
               ))}
             </div>
           )}
 
           {filteredNav.length === 0 && filteredDocs.length === 0 && (
-            <div
-              style={{
-                padding: '32px 16px',
-                textAlign: 'center',
-                color: 'var(--text-muted)',
-                fontSize: '13px',
-              }}
-            >
-              No commands or knowledge found matching "{search}"
+            <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)', fontSize: 13 }}>
+              No commands or documents found for "{search}"
             </div>
           )}
-        </div>
-
-        {/* Footer info */}
-        <div
-          style={{
-            padding: '8px 16px',
-            background: 'var(--surface-subtle)',
-            borderTop: '1px solid var(--border)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            fontSize: '11.5px',
-            color: 'var(--text-muted)',
-          }}
-        >
-          <div style={{ display: 'flex', gap: 12 }}>
-            <span><kbd>↑</kbd> <kbd>↓</kbd> to navigate</span>
-            <span><kbd>↵</kbd> to select</span>
-          </div>
-          <span>Eillish Command Center</span>
         </div>
       </div>
     </div>

@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   FolderGit2,
   RefreshCw,
   Plus,
   GitBranch,
-  Settings as SettingsIcon,
   X,
   Github,
-  CheckCircle2,
+  AlertCircle,
 } from 'lucide-react';
-import { mockRepositories } from '../data/mockData';
+import { repositoryService } from '../services/repository.service';
 import { Repository } from '../types';
 import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
@@ -17,54 +16,76 @@ import { useToast } from '../components/common/Toast';
 
 export const RepositoriesPage: React.FC = () => {
   const { showToast } = useToast();
-  const [repos, setRepos] = useState<Repository[]>(mockRepositories);
+  const [repos, setRepos] = useState<Repository[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [syncingRepoId, setSyncingRepoId] = useState<string | null>(null);
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
   const [newRepoName, setNewRepoName] = useState('');
+  const [newRepoUrl, setNewRepoUrl] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSyncRepo = (id: string, name: string) => {
+  const loadRepositories = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const data = await repositoryService.getRepositories();
+      setRepos(data);
+    } catch (err: any) {
+      setError(err.message || 'Failed to load repositories');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadRepositories();
+  }, []);
+
+  const handleSyncRepo = async (id: string, name: string) => {
     if (syncingRepoId) return;
     setSyncingRepoId(id);
     showToast(`Syncing ${name}... polling Git tree & chunking deltas`, 'info');
 
-    setTimeout(() => {
+    try {
+      await repositoryService.syncRepository(id);
+      showToast(`${name} synchronization initiated in background.`, 'success');
+      // Refresh repositories after a short interval
+      setTimeout(loadRepositories, 1200);
+    } catch (err: any) {
+      showToast(`Sync failed: ${err.message}`, 'info');
+    } finally {
       setSyncingRepoId(null);
-      setRepos((prev) =>
-        prev.map((r) =>
-          r.id === id ? { ...r, status: 'synced', lastSyncedAt: 'Just now' } : r
-        )
-      );
-      showToast(`${name} synchronized successfully. Vector index up to date.`, 'success');
-    }, 1200);
+    }
   };
 
-  const handleSyncAll = () => {
-    showToast('Triggering delta synchronization for all 12 repositories...', 'info');
-    setTimeout(() => {
-      showToast('All repositories synchronized and verified.', 'success');
-    }, 1500);
+  const handleSyncAll = async () => {
+    showToast('Triggering synchronization for all repositories...', 'info');
+    for (const r of repos) {
+      try {
+        await repositoryService.syncRepository(r.id);
+      } catch {}
+    }
+    showToast('All repositories triggered for background sync.', 'success');
+    setTimeout(loadRepositories, 1500);
   };
 
-  const handleConnectSubmit = (e: React.FormEvent) => {
+  const handleConnectSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newRepoName.trim()) return;
 
-    const created: Repository = {
-      id: `repo-${Date.now()}`,
-      name: newRepoName.trim(),
-      description: 'Connected via GitHub Integration. Initializing vector ingestion.',
-      provider: 'github',
-      filesCount: 84,
-      chunksCount: 620,
-      status: 'synced',
-      lastSyncedAt: 'Just now',
-      branch: 'main',
-    };
-
-    setRepos([created, ...repos]);
-    setIsConnectModalOpen(false);
-    setNewRepoName('');
-    showToast(`Repository "${created.name}" connected and queued for AST chunking!`, 'success');
+    try {
+      await repositoryService.connectRepository(
+        newRepoName.trim(),
+        newRepoUrl.trim() || `https://github.com/org/${newRepoName.trim()}`
+      );
+      showToast(`Repository ${newRepoName} connected! Starting initial ingestion.`, 'success');
+      setNewRepoName('');
+      setNewRepoUrl('');
+      setIsConnectModalOpen(false);
+      await loadRepositories();
+    } catch (err: any) {
+      showToast(`Failed to connect repository: ${err.message}`, 'info');
+    }
   };
 
   return (
@@ -74,122 +95,183 @@ export const RepositoriesPage: React.FC = () => {
         <div className="hero-title-group">
           <h1 className="hero-heading">Connected Repositories</h1>
           <p className="hero-subtitle">
-            Synchronized version control repositories with automatic AST chunking & vector indexing.
+            Manage synchronized GitHub codebases, branch trees, and AST neural ingestion jobs.
           </p>
         </div>
 
-        <div className="hero-actions">
+        <div className="flex items-center gap-2">
           <Button
             variant="secondary"
             size="sm"
-            icon={<RefreshCw size={12} />}
             onClick={handleSyncAll}
+            disabled={repos.length === 0}
           >
-            Sync All
+            <RefreshCw size={13} />
+            <span>Sync All</span>
           </Button>
-
           <Button
             variant="primary"
             size="sm"
-            icon={<Plus size={13} />}
             onClick={() => setIsConnectModalOpen(true)}
           >
-            Connect Repository
+            <Plus size={14} />
+            <span>Connect Repository</span>
           </Button>
         </div>
       </div>
 
-      {/* Repositories Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: 14 }}>
-        {repos.map((repo) => {
-          const isSyncing = syncingRepoId === repo.id;
-          return (
-            <div key={repo.id} className="ui-card ui-card--hoverable" style={{ padding: '18px 20px' }}>
-              <div className="flex items-center justify-between" style={{ marginBottom: 6 }}>
-                <div className="flex items-center gap-2">
-                  <div className="kpi-icon-pill" style={{ width: 22, height: 22 }}>
-                    <FolderGit2 size={12} />
-                  </div>
-                  <span className="type-h3" style={{ fontSize: '14px' }}>
-                    {repo.name}
-                  </span>
-                </div>
-                <Badge
-                  variant={repo.status === 'synced' ? 'emerald' : 'amber'}
-                  dot
-                >
-                  {isSyncing ? 'Syncing...' : repo.status === 'synced' ? 'Synced' : 'Needs attention'}
-                </Badge>
-              </div>
-
-              <p className="type-secondary" style={{ fontSize: '12px', minHeight: 34, marginBottom: 14 }}>
-                {repo.description}
-              </p>
-
-              {/* Stats Box */}
-              <div
-                className="flex items-center justify-between type-metadata"
-                style={{
-                  padding: '8px 12px',
-                  background: 'var(--surface-subtle)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-sm)',
-                  marginBottom: 14,
-                }}
-              >
-                <div>
-                  <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                    {repo.filesCount}
-                  </span>{' '}
-                  files
-                </div>
-                <div>
-                  <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                    {repo.chunksCount.toLocaleString()}
-                  </span>{' '}
-                  chunks
-                </div>
-                <div className="flex items-center gap-1">
-                  <GitBranch size={11} />
-                  <span>{repo.branch || 'main'}</span>
-                </div>
-              </div>
-
-              {/* Card Footer Actions */}
-              <div
-                className="flex items-center justify-between"
-                style={{
-                  paddingTop: 10,
-                  borderTop: '1px solid var(--border)',
-                }}
-              >
-                <span className="type-metadata">
-                  {isSyncing ? 'Sync in progress...' : `Last sync: ${repo.lastSyncedAt}`}
-                </span>
-
-                <div className="flex items-center gap-1.5">
-                  <button
-                    className="ui-button ui-button--ghost ui-button--sm"
-                    title="Repository Settings"
-                    onClick={() => showToast(`Config for ${repo.name}`, 'info')}
-                  >
-                    <SettingsIcon size={12} />
-                  </button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    icon={<RefreshCw size={11} className={isSyncing ? 'animate-spin' : ''} />}
-                    onClick={() => handleSyncRepo(repo.id, repo.name)}
-                    disabled={isSyncing}
-                  >
-                    {isSyncing ? 'Syncing' : 'Sync'}
-                  </Button>
-                </div>
-              </div>
+      {/* Main Repositories List */}
+      {isLoading ? (
+        <div className="ui-card" style={{ padding: '60px', textAlign: 'center' }}>
+          <div
+            style={{
+              width: 32,
+              height: 32,
+              border: '3px solid var(--color-charcoal-ink)',
+              borderTopColor: 'transparent',
+              borderRadius: '50%',
+              margin: '0 auto 16px auto',
+              animation: 'spin 0.8s linear infinite',
+            }}
+          />
+          <div style={{ fontWeight: 700, fontSize: '14px' }}>Loading repositories from database...</div>
+        </div>
+      ) : error ? (
+        <div className="ui-card" style={{ padding: '40px', textAlign: 'center', borderColor: '#ef4444' }}>
+          <AlertCircle size={28} style={{ color: '#ef4444', margin: '0 auto 12px auto' }} />
+          <div style={{ fontWeight: 800, fontSize: '16px', color: '#991b1b', marginBottom: 6 }}>
+            Error Loading Repositories
+          </div>
+          <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: 16 }}>{error}</p>
+          <Button variant="secondary" size="sm" onClick={loadRepositories}>
+            Retry
+          </Button>
+        </div>
+      ) : repos.length === 0 ? (
+        <div className="ui-card" style={{ padding: '60px 20px', textAlign: 'center' }}>
+          <div className="flex flex-col items-center gap-3">
+            <div
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 'var(--radius-sm)',
+                background: 'var(--surface-subtle)',
+                border: '2px solid var(--border)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <FolderGit2 size={20} style={{ color: 'var(--text-muted)' }} />
             </div>
-          );
-        })}
-      </div>
+            <h3 className="type-h3" style={{ fontSize: 16 }}>No repositories connected</h3>
+            <p style={{ fontFamily: 'var(--font-manrope)', fontSize: '14px', color: 'var(--text-secondary)', maxWidth: 420 }}>
+              Connect a GitHub repository to start building your personal AI knowledge platform.
+            </p>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setIsConnectModalOpen(true)}
+            >
+              <Plus size={14} />
+              <span>Connect Repository</span>
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 16 }}>
+          {repos.map((repo) => {
+            const isSyncing = syncingRepoId === repo.id || repo.status === 'syncing';
+            return (
+              <div
+                key={repo.id}
+                className="ui-card ui-card--hoverable"
+                style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
+                  <div className="flex items-center gap-2">
+                    <FolderGit2 size={18} style={{ color: 'var(--color-charcoal-ink)' }} />
+                    <span className="type-h3" style={{ fontSize: 15 }}>{repo.name}</span>
+                  </div>
+                  <Badge
+                    variant={
+                      repo.status === 'synced'
+                        ? 'emerald'
+                        : repo.status === 'syncing'
+                        ? 'amber'
+                        : repo.status === 'needs_attention'
+                        ? 'rose'
+                        : 'slate'
+                    }
+                    dot={repo.status === 'synced' || repo.status === 'syncing'}
+                  >
+                    {repo.status.replace('_', ' ')}
+                  </Badge>
+                </div>
+
+                <p className="type-secondary" style={{ fontSize: 12.5, marginBottom: 16, minHeight: 36 }}>
+                  {repo.description || 'No description provided.'}
+                </p>
+
+                {/* Metadata Row */}
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    gap: 8,
+                    padding: '10px 0',
+                    borderTop: '1.5px solid var(--border)',
+                    borderBottom: '1.5px solid var(--border)',
+                    marginBottom: 16,
+                  }}
+                >
+                  <div>
+                    <div className="type-metadata" style={{ fontSize: 11 }}>Files</div>
+                    <div style={{ fontWeight: 800, fontSize: 14 }}>{repo.filesCount}</div>
+                  </div>
+                  <div>
+                    <div className="type-metadata" style={{ fontSize: 11 }}>Chunks</div>
+                    <div style={{ fontWeight: 800, fontSize: 14 }}>{repo.chunksCount}</div>
+                  </div>
+                  <div>
+                    <div className="type-metadata" style={{ fontSize: 11 }}>Branch</div>
+                    <div className="flex items-center gap-1" style={{ fontWeight: 700, fontSize: 13 }}>
+                      <GitBranch size={11} />
+                      <span>{repo.branch || 'main'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Row */}
+                <div className="flex items-center justify-between" style={{ marginTop: 'auto' }}>
+                  <span className="type-metadata" style={{ fontSize: 11 }}>
+                    Synced: {repo.lastSyncedAt || 'Never'}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => handleSyncRepo(repo.id, repo.name)}
+                      disabled={isSyncing}
+                    >
+                      <RefreshCw size={12} className={isSyncing ? 'animate-spin' : ''} />
+                      <span>{isSyncing ? 'Syncing...' : 'Sync'}</span>
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => (window.location.href = `/repositories/${repo.id}`)}
+                    >
+                      Details
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Connect Repository Modal */}
       {isConnectModalOpen && (
@@ -197,95 +279,80 @@ export const RepositoriesPage: React.FC = () => {
           style={{
             position: 'fixed',
             inset: 0,
-            zIndex: 150,
+            background: 'rgba(26, 26, 26, 0.4)',
+            zIndex: 1000,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: 'rgba(15, 23, 42, 0.45)',
-            backdropFilter: 'blur(3px)',
-            padding: 16,
+            padding: 20,
           }}
           onClick={() => setIsConnectModalOpen(false)}
         >
           <div
-            className="animate-slide-up"
-            style={{
-              width: '100%',
-              maxWidth: '480px',
-              background: 'var(--surface)',
-              border: '1px solid var(--border)',
-              borderRadius: 'var(--radius-xl)',
-              boxShadow: 'var(--shadow-float)',
-              padding: '24px',
-            }}
+            className="ui-card"
+            style={{ width: '100%', maxWidth: 460, padding: 28, background: 'var(--color-snow)' }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between" style={{ marginBottom: 16 }}>
               <div className="flex items-center gap-2">
-                <Github size={18} />
-                <h2 className="type-h2">Connect GitHub Repository</h2>
+                <Github size={20} />
+                <h3 className="type-h3" style={{ fontSize: 16 }}>Connect GitHub Repository</h3>
               </div>
               <button
                 onClick={() => setIsConnectModalOpen(false)}
-                className="ui-button ui-button--ghost ui-button--sm"
+                style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
               >
-                <X size={15} />
+                <X size={18} />
               </button>
             </div>
 
-            <p className="type-secondary" style={{ fontSize: 13, marginBottom: 16 }}>
-              Select a repository to index. Eillish will establish AST boundary parsers, compute pgvector embeddings, and configure live push webhooks.
-            </p>
-
             <form onSubmit={handleConnectSubmit} className="flex flex-col gap-4">
               <div>
-                <label className="type-metadata" style={{ display: 'block', marginBottom: 6, fontWeight: 550 }}>
-                  Repository Name (e.g. org/project)
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 700, marginBottom: 6 }}>
+                  Repository Name
                 </label>
                 <input
                   type="text"
-                  className="ui-input"
-                  placeholder="e.g. organization/knowledge-core"
+                  placeholder="e.g. Eillish or fastapi"
                   value={newRepoName}
                   onChange={(e) => setNewRepoName(e.target.value)}
-                  autoFocus
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1.5px solid var(--border)',
+                    outline: 'none',
+                    fontSize: 13,
+                  }}
                 />
               </div>
 
               <div>
-                <label className="type-metadata" style={{ display: 'block', marginBottom: 6, fontWeight: 550 }}>
-                  Default Branch
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 700, marginBottom: 6 }}>
+                  GitHub URL (Optional)
                 </label>
-                <input type="text" className="ui-input" defaultValue="main" />
-              </div>
-
-              <div
-                style={{
-                  padding: '10px 12px',
-                  background: 'var(--surface-subtle)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: 12,
-                  color: 'var(--text-secondary)',
-                }}
-              >
-                <div className="flex items-center gap-1.5 font-medium" style={{ color: 'var(--text-primary)', marginBottom: 2 }}>
-                  <CheckCircle2 size={13} style={{ color: 'var(--success)' }} />
-                  <span>Webhook synchronization</span>
-                </div>
-                Commits to this branch will automatically trigger differential chunk recalculation.
+                <input
+                  type="text"
+                  placeholder="https://github.com/owner/repository"
+                  value={newRepoUrl}
+                  onChange={(e) => setNewRepoUrl(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1.5px solid var(--border)',
+                    outline: 'none',
+                    fontSize: 13,
+                  }}
+                />
               </div>
 
               <div className="flex items-center justify-end gap-2" style={{ marginTop: 8 }}>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => setIsConnectModalOpen(false)}
-                >
+                <Button variant="secondary" size="sm" type="button" onClick={() => setIsConnectModalOpen(false)}>
                   Cancel
                 </Button>
-                <Button type="submit" variant="primary" size="sm" icon={<Plus size={13} />}>
+                <Button variant="primary" size="sm" type="submit">
                   Connect & Index
                 </Button>
               </div>

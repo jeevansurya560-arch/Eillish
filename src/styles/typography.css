@@ -22,6 +22,7 @@ h1, h2, h3, h4, h5, h6, .hero-heading {
   line-height: var(--leading-heading);
   letter-spacing: -0.01em;
   margin: 0;
+  text-wrap: balance;
 }
 
 .hero-heading {
@@ -71,6 +72,7 @@ h1, h2, h3, h4, h5, h6, .hero-heading {
   line-height: var(--leading-body); /* 1.6 */
   color: var(--color-charcoal-ink);
   font-weight: 400;
+  text-wrap: pretty;
 }
 
 .type-secondary {

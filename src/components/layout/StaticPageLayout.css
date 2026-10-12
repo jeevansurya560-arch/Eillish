@@ -1,0 +1,162 @@
+/* ==========================================================================
+   Lpalo — Static Page Layout & Shared Styles
+   Warm Peach Paper (#f6e0db), Charcoal Ink (2px solid #000000), Snow surfaces
+   ========================================================================== */
+
+.static-page-container {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--color-peach-paper);
+  color: var(--color-charcoal-ink);
+  display: flex;
+  flex-direction: column;
+}
+
+.static-nav {
+  height: 52px;
+  background-color: var(--color-peach-paper);
+  border-bottom: 2px solid var(--color-charcoal-ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.static-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.static-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.static-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-charcoal-ink);
+  background: var(--color-snow);
+  font-family: var(--font-manrope);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-charcoal-ink);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.static-nav-link:hover, .static-nav-link.active {
+  background: var(--color-sunbeam-yellow);
+}
+
+.static-main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: 48px 32px 80px;
+}
+
+.static-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.static-title {
+  font-family: var(--font-alfa-slab-one);
+  font-size: clamp(32px, 4.5vw, 48px);
+  line-height: var(--leading-heading);
+  color: var(--color-charcoal-ink);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.static-subtitle {
+  font-family: var(--font-manrope);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 780px;
+  text-wrap: pretty;
+}
+
+.static-content-card {
+  background: var(--color-snow);
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-cards);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.static-prose {
+  font-family: var(--font-manrope);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-charcoal-ink);
+}
+
+.static-prose h2 {
+  font-family: var(--font-alfa-slab-one);
+  font-size: 22px;
+  margin-top: 24px;
+  margin-bottom: 8px;
+  color: var(--color-charcoal-ink);
+}
+
+.static-prose h3 {
+  font-family: var(--font-alfa-slab-one);
+  font-size: 17px;
+  margin-top: 16px;
+  margin-bottom: 6px;
+  color: var(--color-charcoal-ink);
+}
+
+.static-prose p {
+  margin-bottom: 14px;
+  text-wrap: pretty;
+}
+
+.static-prose ul {
+  list-style: disc;
+  margin-left: 20px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.static-prose code {
+  font-family: var(--font-mono);
+  background: var(--surface-subtle);
+  border: 1px solid var(--color-charcoal-ink);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  .static-nav {
+    padding: 0 16px;
+  }
+  .static-nav-links {
+    display: none;
+  }
+  .static-main {
+    padding: 32px 16px 60px;
+  }
+  .static-content-card {
+    padding: 24px;
+  }
+}

@@ -10,6 +10,9 @@ import {
   Sparkles,
   ArrowLeft,
   X,
+  LayoutDashboard,
+  HelpCircle,
+  FileText,
 } from 'lucide-react';
 import './AppShell.css';
 
@@ -21,6 +24,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onOpenCommand }) => {
   const coreNav = [
+    { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { to: '/knowledge', label: 'Knowledge Base', icon: BookOpen, badge: '1,284' },
     { to: '/search', label: 'AI Search', icon: Search, isAI: true },
     { to: '/repositories', label: 'Repositories', icon: FolderGit2, badge: '12' },
@@ -109,7 +113,33 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onOpenCommand
           );
         })}
 
-        <div className="nav-section-label" style={{ marginTop: '24px' }}>
+        <div className="nav-section-label" style={{ marginTop: '20px' }}>
+          Documentation
+        </div>
+        <NavLink
+          to="/how-it-works"
+          className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+          onClick={() => {
+            if (window.innerWidth < 960) onClose();
+          }}
+        >
+          <div className="nav-item-indicator" />
+          <HelpCircle className="nav-item-icon" />
+          <span className="nav-item-label">How It Works</span>
+        </NavLink>
+        <NavLink
+          to="/docs"
+          className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+          onClick={() => {
+            if (window.innerWidth < 960) onClose();
+          }}
+        >
+          <div className="nav-item-indicator" />
+          <FileText className="nav-item-icon" />
+          <span className="nav-item-label">Architecture Docs</span>
+        </NavLink>
+
+        <div className="nav-section-label" style={{ marginTop: '20px' }}>
           Preferences
         </div>
         <NavLink

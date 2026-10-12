@@ -114,3 +114,46 @@ kbd {
 .animate-fade-in {
   animation: fadeIn 0.2s var(--transition-fast) forwards;
 }
+
+/* Accessibility primitives */
+.skip-link {
+  position: absolute;
+  top: -120px;
+  left: 20px;
+  background: var(--color-snow);
+  color: var(--color-charcoal-ink);
+  padding: 10px 18px;
+  border: 2px solid var(--color-charcoal-ink);
+  border-radius: var(--radius-buttons);
+  font-family: var(--font-manrope);
+  font-size: 13px;
+  font-weight: 700;
+  z-index: 9999;
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Reduced motion safety */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

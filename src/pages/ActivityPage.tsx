@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   RefreshCw,
   Database,
@@ -6,14 +6,36 @@ import {
   FileEdit,
   Search,
   X,
+  AlertCircle,
+  Activity,
 } from 'lucide-react';
-import { mockActivityEvents } from '../data/mockData';
+import { ApiClient } from '../services/apiClient';
 import { ActivityEvent } from '../types';
 import { Badge } from '../components/common/Badge';
 
 export const ActivityPage: React.FC = () => {
+  const [events, setEvents] = useState<ActivityEvent[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>('All');
   const [searchFilter, setSearchFilter] = useState('');
+
+  const loadActivities = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const data = await ApiClient.get<ActivityEvent[]>('/activity');
+      setEvents(data);
+    } catch (err: any) {
+      setError(err.message || 'Failed to fetch activity logs');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadActivities();
+  }, []);
 
   const tabs = [
     { id: 'All', label: 'All Events' },
@@ -23,15 +45,13 @@ export const ActivityPage: React.FC = () => {
     { id: 'Knowledge', label: 'Documents' },
   ];
 
-  const filteredEvents = mockActivityEvents.filter((evt) => {
-    // Category match
+  const filteredEvents = events.filter((evt) => {
     let categoryMatch = true;
     if (activeTab === 'Repositories') categoryMatch = evt.type === 'repo_sync';
     if (activeTab === 'Indexing') categoryMatch = evt.type === 'knowledge_indexed';
     if (activeTab === 'Search') categoryMatch = evt.type === 'ai_query';
     if (activeTab === 'Knowledge') categoryMatch = evt.type === 'doc_updated';
 
-    // Search match
     const searchMatch =
       evt.title.toLowerCase().includes(searchFilter.toLowerCase()) ||
       evt.description.toLowerCase().includes(searchFilter.toLowerCase());
@@ -78,7 +98,7 @@ export const ActivityPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Filter Tabs & Search */}
+      {/* Filter and Search Controls */}
       <div className="ui-card" style={{ padding: '8px 12px' }}>
         <div className="flex items-center justify-between gap-3 flex-wrap">
           {/* Category Tabs */}
@@ -88,14 +108,16 @@ export const ActivityPage: React.FC = () => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 style={{
-                  padding: '5px 11px',
+                  padding: '6px 12px',
                   borderRadius: 'var(--radius-sm)',
-                  fontSize: '12.5px',
-                  fontWeight: 500,
+                  border: 'none',
+                  background: activeTab === tab.id ? 'var(--color-charcoal-ink)' : 'transparent',
+                  color: activeTab === tab.id ? 'var(--color-snow)' : 'var(--text-secondary)',
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: '12px',
+                  fontWeight: 600,
                   cursor: 'pointer',
-                  background: activeTab === tab.id ? 'var(--text-primary)' : 'transparent',
-                  color: activeTab === tab.id ? 'var(--text-inverse)' : 'var(--text-secondary)',
-                  transition: 'all var(--transition-fast)',
+                  transition: 'background var(--transition-fast)',
                 }}
               >
                 {tab.label}
@@ -103,18 +125,44 @@ export const ActivityPage: React.FC = () => {
             ))}
           </div>
 
-          {/* Search Input */}
-          <div className="flex items-center gap-2" style={{ minWidth: 220 }}>
-            <Search size={14} style={{ color: 'var(--text-muted)' }} />
+          {/* Search Filter */}
+          <div
+            className="flex items-center gap-2"
+            style={{
+              background: 'var(--surface-subtle)',
+              border: '1.5px solid var(--border)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '4px 10px',
+              minWidth: '200px',
+            }}
+          >
+            <Search size={13} style={{ color: 'var(--text-muted)' }} />
             <input
               type="text"
-              placeholder="Search activity events..."
+              placeholder="Search event title or description..."
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              style={{ fontSize: '13px', color: 'var(--text-primary)' }}
+              style={{
+                border: 'none',
+                background: 'transparent',
+                outline: 'none',
+                fontSize: '12px',
+                fontFamily: 'var(--font-sans)',
+                color: 'var(--text-primary)',
+                width: '100%',
+              }}
             />
             {searchFilter && (
-              <button onClick={() => setSearchFilter('')} style={{ color: 'var(--text-muted)' }}>
+              <button
+                onClick={() => setSearchFilter('')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: 'var(--text-muted)',
+                  display: 'flex',
+                }}
+              >
                 <X size={12} />
               </button>
             )}
@@ -122,61 +170,89 @@ export const ActivityPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Timeline Events List */}
-      <div className="ui-card" style={{ padding: '16px 20px' }}>
-        <div className="timeline-list">
-          {filteredEvents.map((evt, i) => (
-            <div key={evt.id} className="timeline-item">
-              {i < filteredEvents.length - 1 && <div className="timeline-track-line" />}
-
-              {getEventIcon(evt.type)}
-
-              <div className="timeline-body">
-                <div className="timeline-header-row">
-                  <div className="flex items-center gap-2">
-                    <span className="timeline-title">{evt.title}</span>
-                    <Badge variant="emerald" dot>
-                      Success
-                    </Badge>
-                  </div>
-                  <span className="timeline-time">{evt.timestamp}</span>
-                </div>
-
-                <div className="timeline-desc" style={{ marginTop: 3 }}>
-                  {evt.description}
-                </div>
-
-                {evt.metadata && (
-                  <div
-                    className="flex items-center gap-3 type-metadata"
-                    style={{
-                      marginTop: 6,
-                      fontFamily: 'var(--font-mono)',
-                      color: 'var(--text-muted)',
-                      fontSize: '11px',
-                    }}
-                  >
-                    {evt.metadata.repository && <span>repo: {evt.metadata.repository}</span>}
-                    {evt.metadata.filesProcessed && (
-                      <span>files: {evt.metadata.filesProcessed}</span>
-                    )}
-                    {evt.metadata.chunksAdded && (
-                      <span>chunks: +{evt.metadata.chunksAdded}</span>
-                    )}
-                    {evt.metadata.filePath && <span>path: {evt.metadata.filePath}</span>}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-
-          {filteredEvents.length === 0 && (
-            <div style={{ padding: '32px 0', textAlign: 'center', color: 'var(--text-muted)' }}>
-              No events found matching current criteria.
-            </div>
-          )}
+      {/* Main Activity Timeline Feed */}
+      {isLoading ? (
+        <div className="ui-card" style={{ padding: '60px', textAlign: 'center' }}>
+          <div
+            style={{
+              width: 32,
+              height: 32,
+              border: '3px solid var(--color-charcoal-ink)',
+              borderTopColor: 'transparent',
+              borderRadius: '50%',
+              margin: '0 auto 16px auto',
+              animation: 'spin 0.8s linear infinite',
+            }}
+          />
+          <div style={{ fontWeight: 700, fontSize: '14px' }}>Loading real system activity...</div>
         </div>
-      </div>
+      ) : error ? (
+        <div className="ui-card" style={{ padding: '32px', textAlign: 'center', borderColor: '#ef4444' }}>
+          <AlertCircle size={28} style={{ color: '#ef4444', margin: '0 auto 12px auto' }} />
+          <div style={{ fontWeight: 800, fontSize: '15px', color: '#991b1b', marginBottom: 6 }}>
+            Error Loading Activities
+          </div>
+          <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{error}</p>
+        </div>
+      ) : filteredEvents.length === 0 ? (
+        <div className="ui-card" style={{ padding: '60px 20px', textAlign: 'center' }}>
+          <div className="flex flex-col items-center gap-3">
+            <div
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 'var(--radius-sm)',
+                background: 'var(--surface-subtle)',
+                border: '2px solid var(--border)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Activity size={20} style={{ color: 'var(--text-muted)' }} />
+            </div>
+            <h3 className="type-h3" style={{ fontSize: 16 }}>No activity events recorded</h3>
+            <p style={{ fontFamily: 'var(--font-manrope)', fontSize: '14px', color: 'var(--text-secondary)', maxWidth: 420 }}>
+              {searchFilter
+                ? 'No activities matched your search criteria.'
+                : 'Activity events will appear here as repositories are synced, chunks indexed, and queries executed.'}
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="ui-card" style={{ padding: '16px 20px' }}>
+          <div className="activity-timeline">
+            {filteredEvents.map((evt) => (
+              <div key={evt.id} className="timeline-node">
+                <div className="timeline-marker">
+                  {getEventIcon(evt.type)}
+                  <div className="timeline-connector" />
+                </div>
+                <div className="timeline-content">
+                  <div className="timeline-header">
+                    <span className="timeline-title">{evt.title}</span>
+                    <span className="type-timestamp">{evt.timestamp}</span>
+                  </div>
+                  <div className="timeline-desc">{evt.description}</div>
+                  {evt.metadata && (
+                    <div className="timeline-meta-chips">
+                      {evt.metadata.repository && (
+                        <Badge variant="slate">{evt.metadata.repository}</Badge>
+                      )}
+                      {evt.metadata.chunksAdded && (
+                        <Badge variant="emerald">+{evt.metadata.chunksAdded} chunks</Badge>
+                      )}
+                      {evt.metadata.filesProcessed && (
+                        <Badge variant="blue">{evt.metadata.filesProcessed} files</Badge>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

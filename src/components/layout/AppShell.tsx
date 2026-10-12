@@ -11,7 +11,7 @@ export const AppShell: React.FC = () => {
   // Global ⌘K / Ctrl+K keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      if ((e.metaKey || e.ctrlKey) && (e.key.toLowerCase() === 'k' || e.code === 'KeyK')) {
         e.preventDefault();
         setCommandOpen((prev) => !prev);
       }
